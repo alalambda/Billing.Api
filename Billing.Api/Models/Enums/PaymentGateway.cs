@@ -4,6 +4,6 @@ public enum PaymentGateway
 {
     AmazonPay,
     Adyen,
-    Klarna
+    Klarna,
 }
 
