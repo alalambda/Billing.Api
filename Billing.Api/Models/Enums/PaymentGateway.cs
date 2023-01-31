@@ -1,4 +1,4 @@
-﻿namespace Billing.Api.Models;
+﻿namespace Billing.Api.Models.Enums;
 
 public enum PaymentGateway
 {

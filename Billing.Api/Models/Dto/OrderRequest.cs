@@ -1,4 +1,6 @@
-﻿namespace Billing.Api.Models;
+﻿using Billing.Api.Models.Enums;
+
+namespace Billing.Api.Models.Dto;
 
 public class OrderRequest
 {
@@ -8,4 +10,3 @@ public class OrderRequest
     public PaymentGateway PaymentGateway { get; init; }
     public string? Description { get; init; }
 }
-
