@@ -6,9 +6,10 @@ public class AdyenService : IPaymentService
 	{
 	}
 
-    public Task<bool> CallbackAsync(decimal amount)
+    public async Task<bool> CallbackAsync(decimal amount)
     {
-        throw new NotImplementedException();
+        // TODO implement adyen integration
+        return true;
     }
 }
 

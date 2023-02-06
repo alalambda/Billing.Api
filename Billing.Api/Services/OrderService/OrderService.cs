@@ -12,6 +12,8 @@ public class OrderService : IOrderService
     private readonly IOrderRepository _orderRepository;
     private IPaymentService _paymentService;
 
+    private const int DescriptionMaxLength = 500;
+
 	public OrderService(
         IUserRepository userRepository,
         IOrderRepository orderRepository)
@@ -22,8 +24,27 @@ public class OrderService : IOrderService
 
     public async Task<bool> ProcessOrderAsync(OrderRequest orderRequest)
     {
+        _paymentService = GetPaymentService(orderRequest.PaymentGateway);
+        var status = await _paymentService.CallbackAsync(orderRequest.PayableAmount);
+
+        if (status)
+        {
+            await _orderRepository.UpdateOrderAsync(orderRequest.OrderNumber, OrderStatus.Completed);
+        }
+
+        return status;
+    }
+
+    public async Task<bool> IsRequestValid(OrderRequest orderRequest)
+    {
+        if (orderRequest.PayableAmount <= 0 || orderRequest.Description?.Length > DescriptionMaxLength)
+        {
+            return false;
+        }
+
         var user = await GetUserAsync(orderRequest.UserId);
         var order = await GetOrderAsync(orderRequest.OrderNumber);
+
         if (user == null || order == null)
         {
             return false;
@@ -34,10 +55,7 @@ public class OrderService : IOrderService
             return false;
         }
 
-        _paymentService = GetPaymentService(orderRequest.PaymentGateway);
-        var status = await _paymentService.CallbackAsync(orderRequest.PayableAmount);
-
-        return status;
+        return true;
     }
 
     private async Task<User?> GetUserAsync(int userId)
@@ -54,17 +72,13 @@ public class OrderService : IOrderService
 
     private static IPaymentService GetPaymentService(PaymentGateway paymentGateway)
     {
-        switch (paymentGateway)
+        return paymentGateway switch
         {
-            case PaymentGateway.Adyen:
-                return new AdyenService();
-            case PaymentGateway.AmazonPay:
-                return new AmazonPayService();
-            case PaymentGateway.Klarna:
-                return new KlarnaService();
-            default:
-                throw new NotImplementedException();
-        }
+            PaymentGateway.Adyen => new AdyenService(),
+            PaymentGateway.AmazonPay => new AmazonPayService(),
+            PaymentGateway.Klarna => new KlarnaService(),
+            _ => throw new NotImplementedException(),
+        };
     }
 }
 

@@ -2,5 +2,5 @@
 
 public interface IDocumentGenerationService
 {
-    string GenerateReceipt(int orderNumber);
+    Task<object> GenerateReceipt(int orderNumber);
 }

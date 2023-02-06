@@ -15,6 +15,7 @@
     <PackageReference Include="FluentValidation" Version="11.4.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="7.0.2" />
+    <PackageReference Include="IronPdf" Version="2023.1.11416" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +32,9 @@
     <None Remove="Services\OrderService\" />
     <None Remove="Microsoft.EntityFrameworkCore.InMemory" />
     <None Remove="Models\Enums\" />
+    <None Remove="Generators\" />
+    <None Remove="Generators\Templates\" />
+    <None Remove="IronPdf" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />
@@ -42,5 +46,7 @@
     <Folder Include="Services\DocumentGenerationService\" />
     <Folder Include="Services\OrderService\" />
     <Folder Include="Models\Enums\" />
+    <Folder Include="Generators\" />
+    <Folder Include="Generators\Templates\" />
   </ItemGroup>
 </Project>

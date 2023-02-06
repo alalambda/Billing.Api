@@ -9,6 +9,8 @@ public class UserRepository : IUserRepository
 	public UserRepository(BillingDbContext dbContext)
 	{
         _dbContext = dbContext ?? throw new ArgumentNullException(nameof(dbContext));
+
+        _dbContext.Database.EnsureCreatedAsync();
 	}
 
     public async Task<User?> GetUserAsync(int userId) => await _dbContext.Users.FindAsync(userId);

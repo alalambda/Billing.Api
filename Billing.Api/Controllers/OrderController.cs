@@ -24,20 +24,20 @@ public class OrderController : Controller
     {
         // TODO validate token
 
-        var orderRequestValidator = new OrderRequestValidator();
-        var validationResult = orderRequestValidator.Validate(request);
-        if (!validationResult.IsValid)
+        var isValid = await _orderService.IsRequestValid(request);
+        if (!isValid)
         {
-            return BadRequest(validationResult.Errors);
+            return BadRequest();
         }
 
-        var orderProcessingResult = await _orderService.ProcessOrderAsync(request);
-        //if (!orderProcessingResult.Status)
-        //{
-        //    return null;
-        //}
-        //var receipt = _documentGenerationService.GenerateReceipt(orderProcessingResult); //DocumentGenerator.Generate(Document.Receipt, );
+        var processingStatus = await _orderService.ProcessOrderAsync(request);
+        if (!processingStatus)
+        {
+            return new StatusCodeResult(StatusCodes.Status500InternalServerError);
+        }
 
-        return Ok();
+        var receipt = await _documentGenerationService.GenerateReceipt(request.OrderNumber);
+
+        return Ok(receipt);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Billing.Api.Infrastructure;
+using Billing.Api.Infrastructure.Repositories;
 using Billing.Api.Services.DocumentGenerationService;
 using Billing.Api.Services.OrderService;
 using Billing.Api.Services.PaymentService;
@@ -14,10 +15,10 @@ builder.Services.AddDbContext<BillingDbContext>(
         options.UseInMemoryDatabase("BillingDb");
     }
 );
-
-builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IDocumentGenerationService, DocumentGenerationService>();
-
+builder.Services.AddScoped<IOrderService, OrderService>();
 builder.Services.AddScoped<IPaymentService, AmazonPayService>();
 builder.Services.AddScoped<IPaymentService, AdyenService>();
 builder.Services.AddScoped<IPaymentService, KlarnaService>();
